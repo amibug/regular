@@ -350,7 +350,7 @@ Regular.implement({
       this.$on('destroy', component.$unwatch.bind(component,wid2))
     }
     // sync the component's state to called's state
-    expr2.set(component, expr1.get(this));
+    expr2.set && expr2.set(component, expr1.get(this));
   },
   _walk: function(ast, arg1){
     if( _.typeOf(ast) === 'array' ){

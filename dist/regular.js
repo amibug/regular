@@ -1,6 +1,6 @@
 /**
 @author	leeluolee
-@version	0.2.4
+@version	0.2.5
 @homepage	http://regularjs.github.io
 */
 ;(function(){
@@ -1598,9 +1598,19 @@ exports.transition = (function(){
 exports.exprCache = _.cache(100);
 exports.isRunning = false;
 
+exports.config = {
+  macro: {
+  'BEGIN': '{{',
+  'END': '}}',
+  'NAME': /(?:[:_A-Za-z][-\.:_0-9A-Za-z]*)/,
+  'IDENT': /[\$_A-Za-z][_0-9A-Za-z\$]*/,
+  'SPACE': /[\r\n\f ]/
+  }
+}
 });
 require.register("regularjs/src/index.js", function(exports, require, module){
 module.exports = require("./Regular.js");
+var config = require("./config.js");
 
 require("./directive/base.js");
 require("./directive/animation.js");
@@ -1608,6 +1618,9 @@ require("./module/timeout.js");
 
 module.exports.dom = require("./dom.js");
 module.exports.util = require("./util.js");
+module.exports.config = function(){
+  
+}
 
 
 });
@@ -2011,6 +2024,23 @@ dom.nextReflow = function(callback){
 
 
 });
+require.register("regularjs/src/config.js", function(exports, require, module){
+// @TODO resolve the {{ and }} problem
+module.exports = {
+  macro: {
+  'BEGIN': '{{',
+  'END': '}}',
+  //http://www.w3.org/TR/REC-xml/#NT-Name
+  // ":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] | [#x370-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
+  // 'NAME': /(?:[:_A-Za-z\xC0-\u2FEF\u3001-\uD7FF\uF900-\uFFFF][-\.:_0-9A-Za-z\xB7\xC0-\u2FEF\u3001-\uD7FF\uF900-\uFFFF]*)/
+  'NAME': /(?:[:_A-Za-z][-\.:_0-9A-Za-z]*)/,
+  'IDENT': /[\$_A-Za-z][_0-9A-Za-z\$]*/,
+  'SPACE': /[\r\n\f ]/
+  }
+}
+
+
+});
 require.register("regularjs/src/group.js", function(exports, require, module){
 var _ = require('./util');
 var combine = require('./helper/combine')
@@ -2044,6 +2074,7 @@ module.exports = Group;
 });
 require.register("regularjs/src/parser/Lexer.js", function(exports, require, module){
 var _ = require("../util.js");
+var config = require("../config.js");
 
 var test = /a|(b)/.exec("a");
 var testSubCapure = test && test[1] === undefined? 
@@ -2160,17 +2191,7 @@ lo.leave = function(state){
   if(!state || states[states.length-1] === state) states.pop()
 }
 
-var macro = {
-  'BEGIN': '{{',
-  'END': '}}',
-  //http://www.w3.org/TR/REC-xml/#NT-Name
-  // ":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] | [#x370-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
-  // 暂时不这么严格，提取合适范围
-  // 'NAME': /(?:[:_A-Za-z\xC0-\u2FEF\u3001-\uD7FF\uF900-\uFFFF][-\.:_0-9A-Za-z\xB7\xC0-\u2FEF\u3001-\uD7FF\uF900-\uFFFF]*)/
-  'NAME': /(?:[:_A-Za-z][-\.:_0-9A-Za-z]*)/,
-  'IDENT': /[\$_A-Za-z][_0-9A-Za-z\$]*/,
-  'SPACE': /[\r\n\f ]/
-}
+var macro = config.macro;
 
 function genMap(rules){
   var rule, map = {}, sign;

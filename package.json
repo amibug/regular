@@ -1,6 +1,6 @@
 {
   "name": "regularjs",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "author": {
     "name": "leeluolee"
   },
@@ -10,7 +10,7 @@
     "template",
     "data-binding"
   ],
-  "main": "lib/index.js",
+  "main": "src/node.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/regularjs"

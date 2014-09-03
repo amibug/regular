@@ -9,6 +9,7 @@
     "src/env.js",
     "src/index.js",
     "src/dom.js",
+    "src/config.js",
     "src/group.js",
     "src/parser/Lexer.js",
     "src/parser/node.js",

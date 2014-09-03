@@ -126,4 +126,5 @@ IE7+ and other modern browser. __In fact, most of our products need to support I
 1. example gallery   `progressing`
 2. interactive tutorial
 3. blog
+4. Application Core, used for single page application
 
