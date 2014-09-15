@@ -55,12 +55,6 @@ void function(){
         expect(circle.getAttribute("r")).to.equal('8');
         expect(circle.getAttribute("cx")).to.equal('4');
 
-
-
-
-
-
-
         destroy(component, container)
       }
     })
